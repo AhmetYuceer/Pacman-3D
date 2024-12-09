@@ -13,7 +13,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _isDashing;
     [SerializeField] private ParticleSystem _dashParticleEffect;
     private float _speed;
-
     
     private void Start()
     {

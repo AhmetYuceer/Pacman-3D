@@ -2,5 +2,6 @@
 
 public abstract class BaseFood : MonoBehaviour
 {
-    public abstract void Eat();
+    public FoodEnum FoodType;
+    public virtual void Eat(){}
 }

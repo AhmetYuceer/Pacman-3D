@@ -12,6 +12,8 @@ public class PlayerSizeController : MonoBehaviour
     [SerializeField] private Vector3 _mediumSize;
     [SerializeField] private Vector3 _largeSize;
     [SerializeField] private bool _isReady;
+
+    private CharacterSize _currentSize;
     
     private void Start()
     {
@@ -38,25 +40,29 @@ public class PlayerSizeController : MonoBehaviour
     
     private void ChangeSize(CharacterSize nextSize)
     {
-        if (!_isReady)
+        if (!_isReady || _currentSize == nextSize)
             return;
         
-        StartCoroutine(Cooldown());
-        
         Vector3 sizeValue = transform.localScale;
+        
         switch (nextSize)
         {
             case CharacterSize.Small:
+                _currentSize = CharacterSize.Small;
                 sizeValue = _smallSize;
                 break;
             case CharacterSize.Medium:
+                _currentSize = CharacterSize.Medium;
                 sizeValue = _mediumSize;
                 break;
             case CharacterSize.Large:
+                _currentSize = CharacterSize.Large;
                 sizeValue = _largeSize;
                 break;
         }
+        
         transform.localScale = sizeValue;
+        StartCoroutine(Cooldown());
     }
 
     private IEnumerator Cooldown()
