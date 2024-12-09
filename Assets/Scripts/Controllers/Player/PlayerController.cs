@@ -6,6 +6,8 @@ public class PlayerController : MonoBehaviour
     private CharacterController _characterController;
     private PlayerEatController _playerEatController;
 
+    public bool isPoweredUp;
+    
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed;
    
