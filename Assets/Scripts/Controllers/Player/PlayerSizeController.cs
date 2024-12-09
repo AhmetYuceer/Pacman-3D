@@ -12,11 +12,15 @@ public class PlayerSizeController : MonoBehaviour
     [SerializeField] private Vector3 _mediumSize;
     [SerializeField] private Vector3 _largeSize;
     [SerializeField] private bool _isReady;
-
+    [SerializeField] private int _energyCost = 30;
+    
+    
     private CharacterSize _currentSize;
+    private PlayerEatController _playerEatController;
     
     private void Start()
     {
+        _playerEatController = GetComponent<PlayerEatController>();
         _isReady = true;
         ChangeSize(_startingCharacterSize);
     }
@@ -42,7 +46,12 @@ public class PlayerSizeController : MonoBehaviour
     {
         if (!_isReady || _currentSize == nextSize)
             return;
-        
+
+        if (_playerEatController.GetCurrentEnergy() < _energyCost)
+            return;
+
+        _playerEatController.EnergyCost(_energyCost);
+
         Vector3 sizeValue = transform.localScale;
         
         switch (nextSize)
@@ -68,6 +77,7 @@ public class PlayerSizeController : MonoBehaviour
     private IEnumerator Cooldown()
     {
         _isReady = false;
+        StartCoroutine(UIManager.Instance.SkillCooldown(_cooldown));
         yield return new WaitForSeconds(_cooldown);
         _isReady = true;
     }

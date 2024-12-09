@@ -4,19 +4,25 @@ using System.Collections;
 public class PlayerController : MonoBehaviour
 {
     private CharacterController _characterController;
-    
+    private PlayerEatController _playerEatController;
+
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed;
+   
+    [Header("Dash Settings")]
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
     [SerializeField] private float _dashCooldown;
     [SerializeField] private bool _isDashing;
     [SerializeField] private ParticleSystem _dashParticleEffect;
-    private float _speed;
+    [SerializeField] private int _energyCost = 30;
     
+    private float _speed;
+
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
+        _playerEatController = GetComponent<PlayerEatController>();
         SetSpeed(_moveSpeed);
     }
 
@@ -74,12 +80,17 @@ public class PlayerController : MonoBehaviour
         }
         transform.forward = moveDirection;
     }
+
     
     private void Dash()
     {
         if (_isDashing)
             return;
+
+        if (_playerEatController.GetCurrentEnergy() < _energyCost)
+            return;
         
+        _playerEatController.EnergyCost(_energyCost);
         StartCoroutine(Cooldown());
         StartCoroutine(DashDuration());
     }
@@ -96,6 +107,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator Cooldown()
     {
         _isDashing = true;
+        StartCoroutine(UIManager.Instance.DashCooldown(_dashCooldown));
         yield return new WaitForSeconds(_dashCooldown);
         _isDashing = false;
     }

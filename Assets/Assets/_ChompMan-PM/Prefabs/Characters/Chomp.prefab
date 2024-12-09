@@ -273,6 +273,7 @@ MonoBehaviour:
   _dashCooldown: 1
   _isDashing: 0
   _dashParticleEffect: {fileID: 2634476640311435898}
+  _energyCost: 30
 --- !u!114 &8342468227281081271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -291,6 +292,7 @@ MonoBehaviour:
   _mediumSize: {x: 0.7, y: 0.7, z: 0.7}
   _largeSize: {x: 1.2, y: 1.2, z: 1.2}
   _isReady: 0
+  _energyCost: 30
 --- !u!114 &3699689801042291655
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -315,6 +317,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb34931ee50d4f5428cb5332473fe6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerSpawnTransform: {fileID: 0}
   maxHealth: 3
 --- !u!4 &7308235905142051746 stripped
 Transform:

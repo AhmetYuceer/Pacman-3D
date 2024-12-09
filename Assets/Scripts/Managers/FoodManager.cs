@@ -1,9 +1,12 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class FoodManager : MonoBehaviour
 {
     public static FoodManager Instance;
 
+    [SerializeField] List<BaseFood> AllFoods = new List<BaseFood>();
+    
     private int AteFoodCount;
     private int AtePowerFoodCount;
     private int AteCherryCount;
@@ -16,6 +19,19 @@ public class FoodManager : MonoBehaviour
             Destroy(this.gameObject);
     }
 
+    public bool CheckLevelComplate()
+    {
+        bool isComplated = true;
+        
+        foreach (var item in AllFoods)
+        {
+            if (item.gameObject.activeSelf)
+                isComplated = false;
+        }
+
+        return isComplated;
+    }
+    
     public void AteFood()
     {
         AteFoodCount += 1;

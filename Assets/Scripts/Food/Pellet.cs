@@ -3,6 +3,7 @@
     private void Start()
     {
         FoodType = FoodEnum.Pellet;
+        EnergyValue = 10;
     }
 
     public override void Eat()

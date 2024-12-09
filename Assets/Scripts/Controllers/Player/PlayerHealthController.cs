@@ -9,13 +9,14 @@ public class PlayerHealthController : MonoBehaviour
     private void Start()
     {
         _currentHealth = maxHealth;
+        UIManager.Instance.SetHealthBar(_currentHealth, maxHealth);
     }
 
     private void TakeDamage(int damage)
     {
         this.gameObject.transform.position = _playerSpawnTransform.position;        
         _currentHealth -= damage;
-        Debug.Log("current health: " + _currentHealth);
+        UIManager.Instance.SetHealthBar(_currentHealth, maxHealth);
         Death();
     }
 
@@ -30,14 +31,6 @@ public class PlayerHealthController : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.transform.TryGetComponent(out BaseEnemy enemy))
-        {
-            TakeDamage(enemy.DamageValue);
-        }
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        if (other.collider.transform.TryGetComponent(out BaseEnemy enemy))
         {
             TakeDamage(enemy.DamageValue);
         }
