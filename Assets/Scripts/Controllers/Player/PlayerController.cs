@@ -24,8 +24,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _powerUpCooldown;
     private Coroutine powerUpCoroutine;
 
-
-
     private void Start()
     {
         _characterController = GetComponent<CharacterController>();
