@@ -158,6 +158,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 13700000, guid: 07b805cc50f7b21469eb77045e84e87c, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 13700000, guid: 07b805cc50f7b21469eb77045e84e87c, type: 3}
       propertyPath: m_AABB.m_Center.x
       value: 0.000009179115
       objectReference: {fileID: 0}
@@ -267,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d6f446c795dc3c4187cbcbb851994e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPoweredUp: 0
   _moveSpeed: 4
   _dashSpeed: 10
   _dashDuration: 0.2
@@ -274,6 +279,7 @@ MonoBehaviour:
   _isDashing: 0
   _dashParticleEffect: {fileID: 2634476640311435898}
   _energyCost: 30
+  _powerUpCooldown: 0
 --- !u!114 &8342468227281081271
 MonoBehaviour:
   m_ObjectHideFlags: 0

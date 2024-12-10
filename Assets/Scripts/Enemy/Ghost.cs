@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -9,24 +10,46 @@ public class Ghost : BaseEnemy
 
     [SerializeField] private List<Transform> _aiDots = new List<Transform>();
     [SerializeField] private List<Transform> _targetDots = new List<Transform>();
-    [SerializeField] private int targetIndex = 0;
-    [SerializeField] private Vector3 targetPosition;
+    [SerializeField] private int _targetIndex = 0;
+    [SerializeField] private Vector3 _targetPosition;
+    [SerializeField] private float _moveSpeed = 4;
     private bool _isTargetPlayer;
     private Vector3 _startPosition;
     private int _playerDistance = 5;
     private float _searchRadius = 5;
 
+    private bool _isMove;
+    
     void Start()
     {
         EnemyEnum = EnemyEnum.Ghost;
         DamageValue = 1;
         _agent = GetComponent<NavMeshAgent>();
         _startPosition = transform.position;
+        _isMove = true;
     }
 
     private void Update()
     {
-        SetTargetDots();
+        if (_isMove)
+        {
+            SetTargetDots();
+        }
+    }
+
+    public IEnumerator TakeDamage()
+    {
+        if (TryGetComponent(out SkinnedMeshRenderer renderer))
+        {
+            _isMove = false;
+            renderer.enabled = false;
+            transform.position = _startPosition;
+            _agent.speed = 0;
+            yield return new WaitForSeconds(2f);
+            _agent.speed = _moveSpeed;
+            renderer.enabled = true;
+            _isMove = true;
+        }
     }
     
     private void SetTargetDots()
@@ -43,17 +66,17 @@ public class Ghost : BaseEnemy
         {
             _agent.SetDestination(player.transform.position);
         }
-        else if(!_isTargetPlayer)
+        else if(!_isTargetPlayer && _targetDots.Count > 0)
         {
-            if (Vector3.Distance(transform.position, _targetDots[targetIndex].position) <= 0.1f)
+            if (Vector3.Distance(transform.position, _targetDots[_targetIndex].position) <= 0.1f)
             {
-                targetIndex++;
-                if (targetIndex >= _targetDots.Count)
-                    targetIndex = 0;
+                _targetIndex++;
+                if (_targetIndex >= _targetDots.Count)
+                    _targetIndex = 0;
             }
             
-            targetPosition = _targetDots[targetIndex].position;
-            _agent.SetDestination(targetPosition);
+            _targetPosition = _targetDots[_targetIndex].position;
+            _agent.SetDestination(_targetPosition);
         }     
     }
     
@@ -64,16 +87,13 @@ public class Ghost : BaseEnemy
 
         foreach (var dot in _aiDots)
         {
-            // AI'nın kendi menzilinde mi?
             if (Vector3.Distance(transform.position, dot.position) <= _searchRadius)
             {
                 float distanceToPlayer = Vector3.Distance(dot.position, player.transform.position);
                 float distanceFromCurrentPosition = Vector3.Distance(transform.position, dot.position);
 
-                // Noktanın player'dan uzak olmasını ve player’a yaklaşmamayı kontrol et
                 if (distanceToPlayer > Vector3.Distance(transform.position, player.transform.position))
                 {
-                    // Hem AI'nın kendi pozisyonundan uzak hem de player’dan uzak noktayı seç
                     float combinedDistance = distanceToPlayer - distanceFromCurrentPosition;
 
                     if (combinedDistance > maxCombinedDistance)
@@ -90,7 +110,6 @@ public class Ghost : BaseEnemy
             _agent.SetDestination(bestPoint.position);
         }
     }
-
 
     private void CheckPlayerDistance()
     {

@@ -5,9 +5,11 @@ public class PlayerHealthController : MonoBehaviour
     [SerializeField] private Transform _playerSpawnTransform;
     [SerializeField] private int maxHealth = 3;
     private int _currentHealth;
-
+    private PlayerController _playerController;
+    
     private void Start()
     {
+        _playerController = GetComponent<PlayerController>();
         _currentHealth = maxHealth;
         UIManager.Instance.SetHealthBar(_currentHealth, maxHealth);
     }
@@ -32,7 +34,13 @@ public class PlayerHealthController : MonoBehaviour
     {
         if (other.transform.TryGetComponent(out BaseEnemy enemy))
         {
-            TakeDamage(enemy.DamageValue);
+            if (!_playerController.isPoweredUp)
+                TakeDamage(enemy.DamageValue);
+            else if (enemy.EnemyEnum == EnemyEnum.Ghost)
+            {
+                Ghost ghost = (Ghost)enemy;
+                StartCoroutine(ghost.TakeDamage());
+            }
         }
     }
 }

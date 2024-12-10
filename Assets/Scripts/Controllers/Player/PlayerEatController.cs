@@ -2,11 +2,14 @@
 
 public class PlayerEatController : MonoBehaviour
 {
+    private PlayerController _player;
+    
     private int _maxEnergy = 100;
     private int _currentEnergy;
 
     private void Start()
     {
+        _player = GetComponent<PlayerController>();
         _currentEnergy = _maxEnergy;
         UIManager.Instance.SetEnergyBar(_currentEnergy, _maxEnergy);
     }
@@ -48,6 +51,10 @@ public class PlayerEatController : MonoBehaviour
         {
             food.Eat();
             AddEnergy(food.EnergyValue);
+
+            if (food.FoodType == FoodEnum.PowerPellet)
+                _player.PowerUP();
+            
             if (FoodManager.Instance.CheckLevelComplate())
             {
                 Debug.Log("LEVEL COMPLATED");

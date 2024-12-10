@@ -10,7 +10,8 @@ public class PlayerController : MonoBehaviour
     
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed;
-   
+    private float _speed;
+    
     [Header("Dash Settings")]
     [SerializeField] private float _dashSpeed;
     [SerializeField] private float _dashDuration;
@@ -18,8 +19,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool _isDashing;
     [SerializeField] private ParticleSystem _dashParticleEffect;
     [SerializeField] private int _energyCost = 30;
-    
-    private float _speed;
+
+    [Header("Dash Settings")]
+    [SerializeField] private float _powerUpCooldown;
+    private Coroutine powerUpCoroutine;
+
+
 
     private void Start()
     {
@@ -57,7 +62,6 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.position;
         move.y = 0;
         transform.position = move;
-        
         _characterController.Move( transform.forward * (_speed * Time.deltaTime));
     }
     
@@ -82,7 +86,22 @@ public class PlayerController : MonoBehaviour
         }
         transform.forward = moveDirection;
     }
+    
 
+    public void PowerUP()
+    {
+        if (powerUpCoroutine != null)
+            StopCoroutine(powerUpCoroutine);
+ 
+        isPoweredUp = true;
+        powerUpCoroutine = StartCoroutine(PowerUpCooldown());
+    }
+
+    private IEnumerator PowerUpCooldown()
+    {
+        yield return new WaitForSeconds(_powerUpCooldown);
+        isPoweredUp = false;
+    }
     
     private void Dash()
     {

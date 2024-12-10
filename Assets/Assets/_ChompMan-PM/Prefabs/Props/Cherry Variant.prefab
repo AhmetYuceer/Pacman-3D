@@ -60,6 +60,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: a64ff229f591b3647acfd5348c8a2fa0, type: 3}
+      propertyPath: m_CastShadows
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -112,3 +116,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c1f2dbfb9f4572a553e957a0877582, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  FoodType: 0
+  EnergyValue: 0
