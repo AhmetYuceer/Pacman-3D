@@ -1,46 +1,99 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.AI;
 
-public class GhostAI : MonoBehaviour
+public class Ghost : BaseEnemy
 {
-    public Transform player; // Oyuncunun transform'u
-    public float chaseDistance = 5f; // Oyuncuyu kovalamaya başlayacağı mesafe
-    private NavMeshAgent agent;
-    private Vector3 randomDestination;
+    [SerializeField] private PlayerController player; 
+    private NavMeshAgent _agent;
+
+    [SerializeField] private List<Transform> _aiDots = new List<Transform>();
+    [SerializeField] private List<Transform> _targetDots = new List<Transform>();
+    [SerializeField] private int targetIndex = 0;
+    [SerializeField] private Vector3 targetPosition;
+    private bool _isTargetPlayer;
+    private Vector3 _startPosition;
+    private int _playerDistance = 5;
+    private float _searchRadius = 5;
 
     void Start()
     {
-        agent = GetComponent<NavMeshAgent>();
-        SetRandomDestination();
+        EnemyEnum = EnemyEnum.Ghost;
+        DamageValue = 1;
+        _agent = GetComponent<NavMeshAgent>();
+        _startPosition = transform.position;
     }
 
-    void Update()
+    private void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-
-        if (distanceToPlayer < chaseDistance)
+        SetTargetDots();
+    }
+    
+    private void SetTargetDots()
+    {
+        if (player.isPoweredUp && Vector3.Distance(transform.position, player.transform.position) <= _playerDistance)
         {
-            // Oyuncuyu kovala
-            agent.destination = player.position;
+            MoveToFurthestPoint();
+            return;
         }
-        else
+        
+        CheckPlayerDistance();
+        
+        if (_targetDots.Count <= 0 || _isTargetPlayer)
         {
-            // Rastgele dolaş
-            if (agent.remainingDistance < 0.5f)
+            _agent.SetDestination(player.transform.position);
+        }
+        else if(!_isTargetPlayer)
+        {
+            if (Vector3.Distance(transform.position, _targetDots[targetIndex].position) <= 0.1f)
             {
-                SetRandomDestination();
+                targetIndex++;
+                if (targetIndex >= _targetDots.Count)
+                    targetIndex = 0;
+            }
+            
+            targetPosition = _targetDots[targetIndex].position;
+            _agent.SetDestination(targetPosition);
+        }     
+    }
+    
+    private void MoveToFurthestPoint()
+    {
+        Transform bestPoint = null;
+        float maxCombinedDistance = float.MinValue;
+
+        foreach (var dot in _aiDots)
+        {
+            // AI'nın kendi menzilinde mi?
+            if (Vector3.Distance(transform.position, dot.position) <= _searchRadius)
+            {
+                float distanceToPlayer = Vector3.Distance(dot.position, player.transform.position);
+                float distanceFromCurrentPosition = Vector3.Distance(transform.position, dot.position);
+
+                // Noktanın player'dan uzak olmasını ve player’a yaklaşmamayı kontrol et
+                if (distanceToPlayer > Vector3.Distance(transform.position, player.transform.position))
+                {
+                    // Hem AI'nın kendi pozisyonundan uzak hem de player’dan uzak noktayı seç
+                    float combinedDistance = distanceToPlayer - distanceFromCurrentPosition;
+
+                    if (combinedDistance > maxCombinedDistance)
+                    {
+                        maxCombinedDistance = combinedDistance;
+                        bestPoint = dot;
+                    }
+                }
             }
         }
+
+        if (bestPoint != null)
+        {
+            _agent.SetDestination(bestPoint.position);
+        }
     }
 
-    void SetRandomDestination()
+
+    private void CheckPlayerDistance()
     {
-        float range = 10f;
-        Vector3 randomDirection = Random.insideUnitSphere * range;
-        randomDirection += transform.position;
-        NavMeshHit hit;
-        NavMesh.SamplePosition(randomDirection, out hit, range, 1);
-        randomDestination = hit.position;
-        agent.SetDestination(randomDestination);
+        _isTargetPlayer = Vector3.Distance(transform.position, player.transform.position) <= _playerDistance;
     }
 }
