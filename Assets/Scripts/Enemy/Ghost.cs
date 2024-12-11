@@ -31,12 +31,26 @@ public class Ghost : BaseEnemy
 
     private void Update()
     {
-        if (_isMove)
+        if (GameManager.Instance.IsPlay && _isMove)
         {
             SetTargetDots();
         }
     }
 
+    public void RestartGhostPosition()
+    {
+        transform.position = _startPosition;
+        _agent.speed = _moveSpeed;
+        _isMove = true;
+    }
+
+    public void PlayerIsDie()
+    {
+        _agent.speed = 0;
+        _isMove = false;
+        transform.position = _startPosition;
+    }
+    
     public IEnumerator TakeDamage()
     {
         if (TryGetComponent(out SkinnedMeshRenderer renderer))
@@ -45,7 +59,9 @@ public class Ghost : BaseEnemy
             renderer.enabled = false;
             transform.position = _startPosition;
             _agent.speed = 0;
+            
             yield return new WaitForSeconds(2f);
+            
             _agent.speed = _moveSpeed;
             renderer.enabled = true;
             _isMove = true;

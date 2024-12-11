@@ -1,8 +1,10 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerHealthController : MonoBehaviour
 {
-    [SerializeField] private Transform _playerSpawnTransform;
+   
     [SerializeField] private int maxHealth = 3;
     private int _currentHealth;
     private PlayerController _playerController;
@@ -16,23 +18,31 @@ public class PlayerHealthController : MonoBehaviour
 
     private void TakeDamage(int damage)
     {
-        this.gameObject.transform.position = _playerSpawnTransform.position;        
+        _playerController.isDead = true;
         _currentHealth -= damage;
+        SoundManager.Instance.PlayDieSfx();
         UIManager.Instance.SetHealthBar(_currentHealth, maxHealth);
-        Death();
+        StartCoroutine(Death());
     }
 
-    private void Death()
+    private IEnumerator Death()
     {
         if (_currentHealth <= 0)
         {
-            Debug.Log("End Game");
-        }   
+            StartCoroutine(UIManager.Instance.ShowMessage("You Lose!" , 3f));
+            yield return new WaitForSeconds(3f);
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            StartCoroutine(UIManager.Instance.ShowMessage("You Die!" , 3f));
+            StartCoroutine(GameManager.Instance.Respawn());
+        }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.TryGetComponent(out BaseEnemy enemy))
+        if (other.transform.TryGetComponent(out BaseEnemy enemy) && !_playerController.isDead)
         {
             if (!_playerController.isPoweredUp)
                 TakeDamage(enemy.DamageValue);

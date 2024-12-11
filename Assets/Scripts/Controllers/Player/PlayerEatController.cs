@@ -47,8 +47,9 @@ public class PlayerEatController : MonoBehaviour
     
     private void OnTriggerEnter(Collider other)
     {
-        if (other.transform.TryGetComponent(out BaseFood food))
+        if (other.transform.TryGetComponent(out BaseFood food) && !_player.isDead)
         {
+            SoundManager.Instance.PlayEatSfx();
             food.Eat();
             AddEnergy(food.EnergyValue);
 
@@ -57,7 +58,7 @@ public class PlayerEatController : MonoBehaviour
             
             if (FoodManager.Instance.CheckLevelComplate())
             {
-                Debug.Log("LEVEL COMPLATED");
+                StartCoroutine(GameManager.Instance.EndGame());
             }
         } 
     }

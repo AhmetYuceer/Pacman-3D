@@ -37,9 +37,6 @@ public class PlayerSizeController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Alpha2))
             ChangeSize(CharacterSize.Medium);
-        
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            ChangeSize(CharacterSize.Large);
     }
     
     private void ChangeSize(CharacterSize nextSize)
@@ -65,8 +62,6 @@ public class PlayerSizeController : MonoBehaviour
                 sizeValue = _mediumSize;
                 break;
             case CharacterSize.Large:
-                _currentSize = CharacterSize.Large;
-                sizeValue = _largeSize;
                 break;
         }
         

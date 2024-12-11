@@ -7,6 +7,9 @@ public class PlayerController : MonoBehaviour
     private PlayerEatController _playerEatController;
 
     public bool isPoweredUp;
+    public bool isDead;
+    [SerializeField] private Vector3 _playerSpawnPos;
+    [SerializeField] private Animator _animator;
     
     [Header("Movement Settings")]
     [SerializeField] private float _moveSpeed;
@@ -29,12 +32,16 @@ public class PlayerController : MonoBehaviour
         _characterController = GetComponent<CharacterController>();
         _playerEatController = GetComponent<PlayerEatController>();
         SetSpeed(_moveSpeed);
+        _playerSpawnPos = transform.position;
     }
 
     private void Update()
     {
-        Inputs();
-        Move();
+        if (GameManager.Instance.IsPlay)
+        {
+            Inputs();
+            Move();
+        }
     }
     
     private void Inputs()
@@ -55,6 +62,13 @@ public class PlayerController : MonoBehaviour
             Dash();
     }
 
+
+    public void RestartPlayerPosition()
+    {
+        transform.position = _playerSpawnPos;
+        isDead = false;
+    }
+    
     private void Move()
     {
         Vector3 move = transform.position;
@@ -97,8 +111,12 @@ public class PlayerController : MonoBehaviour
 
     private IEnumerator PowerUpCooldown()
     {
+        _animator.SetBool("powerUp",true);
+        SoundManager.Instance.PlayPowerUpSound();
         yield return new WaitForSeconds(_powerUpCooldown);
         isPoweredUp = false;
+        SoundManager.Instance.StopPowerUpSound();
+        _animator.SetBool("powerUp",false);
     }
     
     private void Dash()
@@ -116,6 +134,7 @@ public class PlayerController : MonoBehaviour
     
     private IEnumerator DashDuration()
     {
+        SoundManager.Instance.PlayDashSfx();
         SetSpeed(_dashSpeed);
         _dashParticleEffect.Play();
         yield return new WaitForSeconds(_dashDuration);

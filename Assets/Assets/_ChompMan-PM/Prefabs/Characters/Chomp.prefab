@@ -186,6 +186,10 @@ PrefabInstance:
       value: 0.6190062
       objectReference: {fileID: 0}
     - target: {fileID: 13700000, guid: 07b805cc50f7b21469eb77045e84e87c, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 01df7ad55b5244c4791157a1844776ae, type: 2}
+    - target: {fileID: 13700000, guid: 07b805cc50f7b21469eb77045e84e87c, type: 3}
       propertyPath: m_BlendShapeWeights.Array.size
       value: 2
       objectReference: {fileID: 0}
@@ -226,7 +230,38 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 5573590325420974373}
+    - targetCorrespondingSourceObject: {fileID: 100002, guid: 07b805cc50f7b21469eb77045e84e87c,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7991449391720465599}
   m_SourcePrefab: {fileID: 100100000, guid: 07b805cc50f7b21469eb77045e84e87c, type: 3}
+--- !u!1 &7308235905141624704 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 100002, guid: 07b805cc50f7b21469eb77045e84e87c,
+    type: 3}
+  m_PrefabInstance: {fileID: 7308235905141655842}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &7991449391720465599
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7308235905141624704}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 646e0c484977beb4fa9697fb2794833b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7308235905141624706 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 100000, guid: 07b805cc50f7b21469eb77045e84e87c,
@@ -272,6 +307,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isPoweredUp: 0
+  isDead: 0
+  _playerSpawnPos: {x: 0, y: 0, z: 0}
+  _animator: {fileID: 7991449391720465599}
   _moveSpeed: 4
   _dashSpeed: 10
   _dashDuration: 0.2
@@ -279,7 +317,7 @@ MonoBehaviour:
   _isDashing: 0
   _dashParticleEffect: {fileID: 2634476640311435898}
   _energyCost: 30
-  _powerUpCooldown: 0
+  _powerUpCooldown: 10
 --- !u!114 &8342468227281081271
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -323,7 +361,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fb34931ee50d4f5428cb5332473fe6b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _playerSpawnTransform: {fileID: 0}
   maxHealth: 3
 --- !u!4 &7308235905142051746 stripped
 Transform:
